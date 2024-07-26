@@ -1,15 +1,25 @@
 const express = require('express');
 const axios = require('axios');
+const path = require('path');
 const app = express();
 require('dotenv').config();
+const staticRoute = require('./routes/staticRouter');
 
 app.set('view engine', 'ejs');
+
+app.set("views", path.resolve("./views"));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+ 
+app.use("/", staticRoute);
+
 const API_KEY = process.env.API_KEY;
 // app.get('/',(req,res) =>{
 //     res.send("Hello World");
 // })
 
 app.get("/", function(req,res){
+    // return res.render("home");
     const place = req.query.place
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${API_KEY}`
 
